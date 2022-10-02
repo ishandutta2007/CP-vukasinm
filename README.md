@@ -1,3 +1,3 @@
 # CP
-## Implementacija Ford-Fulkersonovog algoritma za maksimalni protok.
-Algoritam koristi standardnu tehniku pronalazenja kriticnog puta BFS-om i njegovog uvecavanja.
+## Here you can find my own implementations of various techniques and data structures used heavily in competitive programming.
+
