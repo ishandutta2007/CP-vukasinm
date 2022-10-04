@@ -6,12 +6,12 @@ using namespace std;
 
 
 
-vector<int> graf[MAXN];//graf sa usmerenim granama
-vector<int> graf_rev[MAXN]; // graf sa obrnuto usmerenim granama
-map<pair<int,int>, pair<int,int>> kapacitet; //svakoj usmerenoj grani (i,j) dodelimo par(x_ij,c_ij), gde je c_ij kapacitet grane,
-// a x_ij je trenutni protok koji se  menja
-int max_flow = 0,id=0;//max_flow je promenljiva koju povecavamo svaki put kada nadjemo novi put od sourca do sinka koja nema popunjene ni prazne grane(takve grane zovemo potencijalne)
-// id je indikator da nismo stigli do n u bfsu, tj da nemamo vise gde da povecavamo
+vector<int> graf[MAXN];//graph with directed edges
+vector<int> graf_rev[MAXN]; // graf with reversed edges
+map<pair<int,int>, pair<int,int>> kapacitet; //we assign to each edge (i,j) a pair(x_ij,c_ij), where c_ij is the capacity of the edge,
+// and x_ij is the current flow through this edge
+int max_flow = 0,id=0;//max_flow is a variable which we increase every time we find a new feasible path from source to sink(refer to edges of such a path as potential)
+// id is an indicator if we reached n in bfs, ie. no more increasing is possible
 
 
 void bfs(int n)
@@ -25,7 +25,7 @@ void bfs(int n)
     int e; // najveca vrednost koju mozemo dodati promenljivoj max_flow iz jedne dobre putanje
     queue<int> q;//standardni bfs queue
     q.push(1);
-    val[1] = INF;// val je memoizaciona promenljiva koja oznacava trenutni potencijalni maksimum koji mozemo dodati flowu dok jos nismo stigli do kraja
+    val[1] = INF;// val is a memoization variable denoting the potential maximum we can ad to the flow before reaching the end of a path
     while(!q.empty())
     {
         int v = q.front();
@@ -35,7 +35,7 @@ void bfs(int n)
             e = val[n];
             while(v!=1)
             {
-                if(parent[v].second == 1)// druga koordinata roditelja oznacava da li je roditelj usmeren ka detetu ili dete ka roditelju
+                if(parent[v].second == 1)// 2nd coordinate indicates direction
                 {
                     kapacitet[make_pair(parent[v].first , v)].first = kapacitet[make_pair(parent[v].first , v)].first + e;
 
@@ -43,7 +43,7 @@ void bfs(int n)
                 else if(parent[v].second == -1){
                     kapacitet[make_pair(v,parent[v].first)].first = kapacitet[make_pair(v,parent[v].first)].first - e;
                 }
-                cout<<v<<" "<<parent[v].first<<" ";//ispis putanje koja vodi od 1 do n
+                cout<<v<<" "<<parent[v].first<<" ";//writes out the path from 1 to n
                 v = parent[v].first;
             }
             cout<<endl;
@@ -64,7 +64,7 @@ void bfs(int n)
                     cout<<j<<" "<<v<<" dodavanje unapred "<<endl;}
                 }
         }
-        for(int j: graf_rev[v])// prolazak kroz susede tipa j -> v
+        for(int j: graf_rev[v])// passing through neighbours of type j->v
         {
             if(kapacitet[make_pair(j,v)].first >0)
                 {
